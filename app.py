@@ -2,9 +2,10 @@ from flask import Flask, jsonify, send_from_directory, request
 from flask_cors import CORS
 import requests
 import logging
+import uvicorn
 
 app = Flask(__name__, static_folder='static')
-CORS(app)
+CORS(app, origins="*")
 PREDICTION_ENGINE_URL = "http://localhost:8000"
 
 logging.basicConfig(level=logging.DEBUG)
@@ -54,13 +55,6 @@ def antirecommender():
         })
 
         return result
-    # return jsonify({
-    #     'recommendations': [
-    #         'If you like coffee, try staying awake all night',
-    #         'If you enjoy reading, try reading backwards',
-    #         'If you like music, try listening to everything at 0.5x speed'
-    #     ]
-    # })
 
 
 @app.route('/taste', methods=['POST'])
@@ -89,4 +83,6 @@ def get_suggestions():
 
 
 if __name__ == '__main__':
-    app.run(debug=True) 
+    # app.run(debug=True)
+    logger.info("Starting server...")
+    uvicorn.run("app:app", host='0.0.0.0', port=5000, reload=True)
