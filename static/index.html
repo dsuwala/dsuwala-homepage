@@ -108,7 +108,9 @@
         }
 
         .search-box {
+            position: relative;
             margin-bottom: 20px;
+            z-index: 100;
         }
         
         input[type="text"] {
@@ -220,6 +222,36 @@
                 font-size: 1.2rem;
             }
         }
+
+        .suggestions-dropdown {
+            position: absolute;
+            top: 42px;
+            left: 0;
+            width: 200px;
+            max-height: 300px;
+            overflow-y: auto;
+            background-color: white;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            border-radius: 0 0 4px 4px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+        
+        .suggestion-item {
+            padding: 8px 12px;
+            cursor: pointer;
+        }
+        
+        .suggestion-item:hover {
+            background-color: #f5f5f5;
+        }
+        
+        @media screen and (max-width: 768px) {
+            .suggestions-dropdown {
+                width: 100%;
+            }
+        }
     </style>
 </head>
 <body>
@@ -238,10 +270,9 @@
                     <div class="search-box">
                         <input type="text" 
                                id="searchInput" 
-                               list="movieSuggestions" 
                                placeholder="Search for a movie..."
                                oninput="handleInputChange(event)">
-                        <datalist id="movieSuggestions"></datalist>
+                        <div id="suggestions" class="suggestions-dropdown" style="display: none;"></div>
                         <select id="yearSelect">
                             <option value="">Select Year (optional)</option>
                         </select>
@@ -287,9 +318,9 @@
         // Call it when page loads
         populateYears();
 
-        //TODO add endpoint for suggestions and remove explicit year selection. Attach 
-        // year based on the selected movie. Suggestion dropdow menu should contain
-        // title and year in the brackets.
+        let typingTimer;
+        const doneTypingInterval = 300; // wait 300ms after user stops typing
+
         async function handleSearch() {
             const searchInput = document.getElementById('searchInput').value;
             const yearSelect = document.getElementById('yearSelect').value;
@@ -324,10 +355,10 @@
                     `;
                 }
                 // Handle regular results
-                else if (data.recommendations && data.recommendations.length > 0) {
+                else if (data.results && data.results.length > 0) {
                     resultContent.innerHTML = `
                         <ul style="list-style-type: none; padding: 0;">
-                            ${data.recommendations.map(result => `<li style="margin-bottom: 10px;">${result}</li>`).join('')}
+                            ${data.results.map(result => `<li style="margin-bottom: 10px;">${result}</li>`).join('')}
                         </ul>
                     `;
                 } else {
@@ -340,41 +371,50 @@
             }
         }
 
-        let typingTimer;
-        const doneTypingInterval = 300; // wait 300ms after user stops typing
-
         async function handleInputChange(event) {
             clearTimeout(typingTimer);
             const query = event.target.value;
+            const suggestionsDiv = document.getElementById('suggestions');
             
             if (query.length < 2) {
-                document.getElementById('movieSuggestions').innerHTML = '';
+                suggestionsDiv.style.display = 'none';
                 return;
             }
 
-            // Wait for user to stop typing before making API call
             typingTimer = setTimeout(async () => {
                 try {
-                    const response = await fetch('/antirecommender/search-suggestions', {
+                    const response = await fetch(`/antirecommender/search-suggestions?query=${encodeURIComponent(query)}`, {
                         method: 'GET',
                         headers: {
                             'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({ query })
+                        }
                     });
                     
                     const suggestions = await response.json();
                     
-                    // Update datalist with suggestions
-                    const datalist = document.getElementById('movieSuggestions');
-                    datalist.innerHTML = suggestions.map(s => 
-                        `<option value="${s}">`
+                    // Update suggestions div
+                    suggestionsDiv.innerHTML = suggestions.map(s => 
+                        `<div class="suggestion-item" onclick="selectSuggestion('${s}')">${s}</div>`
                     ).join('');
+                    suggestionsDiv.style.display = suggestions.length ? 'block' : 'none';
                 } catch (error) {
                     console.error('Error fetching suggestions:', error);
                 }
             }, doneTypingInterval);
         }
+
+        // Add function to handle suggestion selection
+        function selectSuggestion(value) {
+            document.getElementById('searchInput').value = value;
+            document.getElementById('suggestions').style.display = 'none';
+        }
+
+        // Hide suggestions when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.search-box')) {
+                document.getElementById('suggestions').style.display = 'none';
+            }
+        });
 
         document.addEventListener('touchstart', function() {}, {passive: true});
     </script>
