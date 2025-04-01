@@ -40,18 +40,18 @@ jobs:
       # Step 5: Build the Docker image
       - name: Build Docker image
         run: |
-          docker build -t europe-central2-docker.pkg.dev/${{ env.PROJECT_ID }}/homepage .
+          docker build -t europe-central2-docker.pkg.dev/${{ env.PROJECT_ID }}/my-repo/homepage .
 
       # Step 6: Push the Docker image to Google Artifact Registry
       - name: Push Docker image to Artifact Registry
         run: |
-          docker push europe-central2-docker.pkg.dev/${{ env.PROJECT_ID }}/homepage
+          docker push europe-central2-docker.pkg.dev/${{ env.PROJECT_ID }}/my-repo/homepage
 
       # Step 7: Deploy the image to Cloud Run
       - name: Deploy to Cloud Run
         run: |
           gcloud run deploy homepage \
-            --image europe-central2-docker.pkg.dev/${{ env.PROJECT_ID }}/homepage \
+            --image europe-central2-docker.pkg.dev/${{ env.PROJECT_ID }}/my-repo/homepage \
             --region europe-central2 \
             --platform managed \
             --allow-unauthenticated
