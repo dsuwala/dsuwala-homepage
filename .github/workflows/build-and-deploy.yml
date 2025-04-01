@@ -2,6 +2,7 @@ name: CI/CD Pipeline for Cloud Run
 
 env:
   PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+  PROJECT_NUMBER: ${{ secrets.GCP_PROJECT_NUMBER }}
 
 on:
   push:
@@ -25,7 +26,7 @@ jobs:
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v1
         with:
-          workload_identity_provider: 'projects/${{ env.PROJECT_ID }}/locations/global/workloadIdentityPools/github-pool/providers/github-provider'
+          workload_identity_provider: 'projects/${{ env.PROJECT_NUMBER }}/locations/global/workloadIdentityPools/github-pool/providers/github-provider'
           service_account: 'github-deploy@${{ env.PROJECT_ID }}.iam.gserviceaccount.com'
 
       # Step 3: Set up Google Cloud SDK (gcloud CLI)
