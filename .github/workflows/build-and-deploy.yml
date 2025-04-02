@@ -30,7 +30,8 @@ jobs:
 
     - name: Authenticate to Google Cloud
       run: |
-        gcloud auth activate-service-account ${{ env.SVC_ACCOUNT_NAME }} --key-file=${{ env.SERVICE_ACCOUNT_KEY }}
+        echo "${{ env.SERVICE_ACCOUNT_KEY }}" > $GOOGLE_APPLICATION_CREDENTIALS
+        gcloud auth activate-service-account ${{ env.SVC_ACCOUNT_NAME }} --key-file=$GOOGLE_APPLICATION_CREDENTIALS
         gcloud config set project ${{ env.PROJECT_ID }}
         gcloud config set run/region ${{ env.REGION }}
 
