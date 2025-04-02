@@ -37,6 +37,10 @@ jobs:
       - name: Authenticate Docker with Artifact Registry
         run: |
           gcloud auth configure-docker europe-central2-docker.pkg.dev
+      
+      - name: Extract Repository ID from OIDC Token (debugging)
+        run: |
+          echo $ACTIONS_ID_TOKEN | jq -R 'split(".") | .[1] | @base64d | fromjson | .repository_id'
 
       # Step 5: Build the Docker image
       - name: Build Docker image
