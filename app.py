@@ -3,13 +3,21 @@ from flask_cors import CORS
 import requests
 import logging
 import uvicorn
+import os
+from google.auth.transport import requests as g_requests
+from google.oauth2 import id_token
+
 
 app = Flask(__name__, static_folder='static')
 CORS(app, origins="*")
-PREDICTION_ENGINE_URL = "http://localhost:8000"
 
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
+
+# PREDICTION_ENGINE_URL = "http://localhost:8000"
+PREDICTION_ENGINE_URL = os.getenv("PREDICTION_ENGINE_URL")
+if not PREDICTION_ENGINE_URL:
+    raise EnvironmentError("PREDICTION_ENGINE_URL is not set")
 
 
 @app.route('/')
@@ -29,10 +37,17 @@ def antirecommender():
         year = data.get("year")
         json.update({"year": year})
 
+    try:
+        token = id_token.fetch_id_token(g_requests.Request(), PREDICTION_ENGINE_URL)
+    except Exception as e:
+        logger.error(f"Failed to fetch ID token: {str(e)}")
+        return jsonify({"error": "Authentication failed"}), 500
+
     # Make request to the recommender API
     response = requests.post(
         f"{PREDICTION_ENGINE_URL}/recommend",
-        json=json
+        json=json,
+        headers={"Authorization": f"Bearer {token}"}
     )
 
     logger.info(f"Response: {response.json()}")
@@ -75,7 +90,17 @@ def get_suggestions():
     query = request.args.get('query', '').lower()
     logger.info(f"Received search suggestions request for query: {query}")
 
-    response = requests.get(f"{PREDICTION_ENGINE_URL}/search-suggestions", params={'query': query})
+    try:
+        token = id_token.fetch_id_token(g_requests.Request(), PREDICTION_ENGINE_URL)
+    except Exception as e:
+        logger.error(f"Failed to fetch ID token: {str(e)}")
+        return jsonify({"error": "Authentication failed"}), 500
+
+    response = requests.get(
+        f"{PREDICTION_ENGINE_URL}/search-suggestions",
+        params={'query': query},
+        headers={"Authorization": f"Bearer {token}"}
+    )
     response_json = response.json()
     logger.info(f"Suggestions: {response_json}")
     suggestions = response_json['suggestions']

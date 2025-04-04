@@ -7,6 +7,7 @@ env:
   SVC_ACCOUNT_NAME: ${{ secrets.GCP_SVC_ACCOUNT_NAME }}
   SVC_ACCOUNT_EMAIL: ${{ secrets.GCP_SVC_ACCOUNT_NAME }}@${{ secrets.GCP_PROJECT_ID }}.iam.gserviceaccount.com
   RUNNER_SVC_ACCOUNT_EMAIL: ${{ secrets.GCP_RUNNER_SVC_ACCOUNT_NAME }}@${{ secrets.GCP_PROJECT_ID }}.iam.gserviceaccount.com
+  PREDICTION_ENGINE_URL: ${{ secrets.CLUSTERING_ENGINE_URL }}
   DOCKER_REPO: my-repo
   DOCKER_IMAGE: homepage
   CLOUD_RUN_SERVICE: homepage
@@ -56,6 +57,7 @@ jobs:
         gcloud run deploy ${{ env.CLOUD_RUN_SERVICE }} \
           --image=${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.DOCKER_REPO }}/${{ env.DOCKER_IMAGE }}:latest \
           --service-account=${{ env.RUNNER_SVC_ACCOUNT_EMAIL}} \
+          --set-env-vars=PREDICTION_ENGINE_URL=${{ env.PREDICTION_ENGINE_URL }} \
           --region=${{ env.REGION }} \
           --platform=managed \
           --allow-unauthenticated 
