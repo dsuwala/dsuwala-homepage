@@ -247,6 +247,129 @@
             background-color: #f5f5f5;
         }
         
+        /* Sliding Panel Styles */
+        .sliding-panel {
+            position: fixed;
+            top: 0;
+            height: 100vh;
+            width: 300px;
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease-in-out;
+            z-index: 1000;
+            padding: 20px;
+            display: none;
+            overflow-y: auto; /* Enable scrolling */
+        }
+
+        .sliding-panel.from-left {
+            left: 0;
+            transform: translateX(-100%);
+        }
+
+        .sliding-panel.from-right {
+            right: 0;
+            transform: translateX(100%);
+        }
+
+        .sliding-panel.active {
+            transform: translateX(0);
+        }
+
+        .sliding-panel-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 28px;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: background-color 0.2s;
+        }
+
+        .sliding-panel-close:hover {
+            background-color: rgba(0,0,0,0.1);
+        }
+
+        .panel-content {
+            padding-top: 20px;
+            padding-bottom: 40px; /* Add bottom padding for better scrolling */
+        }
+
+        .panel-content h3 {
+            font-size: 24px;
+            margin-right: 40px;
+        }
+
+        .project-description {
+            margin-top: 20px;
+        }
+
+        .project-description p {
+            line-height: 1.6;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .project-description h4 {
+            font-size: 18px;
+            margin: 25px 0 15px;
+            color: #222;
+        }
+
+        .project-description ul {
+            list-style-type: none;
+            padding-left: 0;
+            margin-bottom: 20px;
+        }
+
+        .project-description li {
+            margin-bottom: 12px;
+            padding-left: 24px;
+            position: relative;
+            line-height: 1.4;
+        }
+
+        .project-description li:before {
+            content: "•";
+            position: absolute;
+            left: 8px;
+            color: #666;
+        }
+
+        .tech-stack {
+            font-size: 14px;
+            line-height: 1.8;
+            color: #555;
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 6px;
+        }
+
+        .panel-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 999;
+            opacity: 0;
+            display: none;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        .panel-overlay.active {
+            display: block;
+            opacity: 1;
+        }
+        
         @media screen and (max-width: 768px) {
             .suggestions-dropdown {
                 width: 100%;
@@ -283,14 +406,14 @@
                         <div id="resultContent"></div>
                     </div>
                 </div>
-                <button class="details-button">Details & Monitoring</button>
+                <button class="details-button" data-panel="antirecommender">Details</button>
             </div>
             <div class="project-box">
                 <div class="project-content">
                     <h2 class="project-title">This website</h2>
                     <!-- Project content will go here -->
                 </div>
-                <button class="details-button">Details & Monitoring</button>
+                <button class="details-button" data-panel="website">Details</button>
             </div>
         </div>
         <div class="project-box">
@@ -298,9 +421,58 @@
                 <h2 class="project-title">FART-based taste predictor</h2>
                 <!-- Project content will go here -->
             </div>
-            <button class="details-button">Details & Monitoring</button>
+            <button class="details-button" data-panel="taste">Details</button>
         </div>
     </div>
+
+    <!-- Panel Overlay -->
+    <div class="panel-overlay"></div>
+
+    <!-- Sliding Panels -->
+    <div id="panel-antirecommender" class="sliding-panel">
+        <button class="sliding-panel-close">&times;</button>
+        <div class="panel-content">
+            <h3>Antirecommender</h3>
+            <p> Tech stack: Python, Flask, Scikit-learn</p>
+        </div>
+    </div>
+
+    <div id="panel-website" class="sliding-panel">
+        <button class="sliding-panel-close">&times;</button>
+        <div class="panel-content">
+            <h3>This website</h3>
+            <div class="project-description">
+                <p>A cloud-native portfolio website showcasing my projects through a microservices architecture. 
+                    Each project runs as an independent service in Google Cloud Run scaling to zero, 
+                    to keeps them cost-effective and scalable.</p>
+                
+                <h4>Key Achievements:</h4>
+                <ul>
+                    <li>Designed and implemented a secure microservices architecture on Google Cloud Platform</li>
+                    <li>Containerized the webpage using Docker</li>
+                    <li>Set up automated CI/CD pipelines using GitHub Actions</li>
+                    <li>Implemented container-based deployment with Docker</li>
+                    <li>Established secure service-to-service authentication using GitHub Secrets and GCP service accounts</li>
+                    <li>Leveraged AI-assisted development using Large Language Models to accelerate frontend implementation and improve code quality</li>
+                </ul>
+
+                <h4>Tech Stack:</h4>
+                <p class="tech-stack">
+                    Google Cloud Platform • Cloud Run • Docker • GitHub Actions • CI/CD • Microservices • Flask • 
+                    Container Registry • Service Authentication • GitHub Secrets • Python • LLM-Assisted Development
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div id="panel-taste" class="sliding-panel">
+        <button class="sliding-panel-close">&times;</button>
+        <div class="panel-content">
+            <h3>FART-based taste predictor</h3>
+            <p> Project under construction... </p>
+        </div>
+    </div>
+
     <script>
         // Populate years in the dropdown
         function populateYears() {
@@ -417,6 +589,55 @@
         });
 
         document.addEventListener('touchstart', function() {}, {passive: true});
+
+        // Sliding Panel functionality
+        document.querySelectorAll('.details-button').forEach(button => {
+            button.addEventListener('click', function(e) {
+                const panelId = this.dataset.panel;
+                const panel = document.getElementById(`panel-${panelId}`);
+                const overlay = document.querySelector('.panel-overlay');
+                
+                // Calculate which side to show the panel from
+                const buttonRect = this.getBoundingClientRect();
+                const distanceToLeft = buttonRect.left;
+                const distanceToRight = window.innerWidth - buttonRect.right;
+                const fromRight = distanceToLeft < distanceToRight;
+                
+                // Remove any existing classes and show the panel
+                panel.classList.remove('from-left', 'from-right');
+                panel.style.display = 'block';
+                
+                // Force a reflow to ensure the display change takes effect
+                panel.offsetHeight;
+                
+                // Add the appropriate class based on the side
+                panel.classList.add(fromRight ? 'from-right' : 'from-left');
+                
+                // Trigger the animation in the next frame
+                requestAnimationFrame(() => {
+                    panel.classList.add('active');
+                    overlay.classList.add('active');
+                });
+            });
+        });
+
+        // Close panel functionality
+        document.querySelectorAll('.sliding-panel-close, .panel-overlay').forEach(element => {
+            element.addEventListener('click', function() {
+                const panels = document.querySelectorAll('.sliding-panel.active');
+                const overlay = document.querySelector('.panel-overlay');
+                
+                panels.forEach(panel => {
+                    panel.classList.remove('active');
+                    // Wait for the transition to complete before hiding
+                    setTimeout(() => {
+                        panel.style.display = 'none';
+                    }, 300); // Match the transition duration
+                });
+                
+                overlay.classList.remove('active');
+            });
+        });
     </script>
 </body>
 </html> 
