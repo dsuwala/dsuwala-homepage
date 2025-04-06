@@ -116,7 +116,7 @@
             cursor: pointer;
             transition: all 0.3s ease;
             width: auto;
-            margin-top: 2rem;
+            margin-top: 0.01rem;
             align-self: flex-end;
         }
 
@@ -168,10 +168,17 @@
         
         .results-container {
             margin-top: 20px;
+            margin-bottom: 5px;
             padding: 20px;
             border: 1px solid #ccc;
             border-radius: 4px;
-            display: none;  /* Hidden by default */
+            display: block;
+        }
+
+        .default-message {
+            color: #666;
+            line-height: 1.6;
+            font-style: italic;
         }
 
         .results-container.visible {
@@ -461,7 +468,15 @@
                     </div>
                     <div id="resultContainer" class="results-container">
                         <h3>Results:</h3>
-                        <div id="resultContent"></div>
+                        <div id="resultContent">
+                            <p class="default-message">
+                                Select a movie to learn what movie you won't like...maybe. 
+                                It may still be good movies, so why not try? 
+                                Start writing and select movie from the list. <br>
+                                Important: year in the brackets is only a suggestion and before you hit search 
+                                you need to set year to the correct value.
+                            </p>
+                        </div>
                     </div>
                 </div>
                 <button class="details-button" data-panel="antirecommender">Details</button>
