@@ -88,6 +88,24 @@
             justify-content: space-between;
             align-items: stretch;
             height: calc(100vh - 9rem);
+            position: relative; /* Add position relative for absolute positioning of status */
+        }
+
+        .build-status {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .build-status img {
+            height: 20px;
+            transition: opacity 0.2s;
+        }
+
+        .build-status img:hover {
+            opacity: 0.8;
         }
 
         .details-button {
@@ -252,14 +270,54 @@
             position: fixed;
             top: 0;
             height: 100vh;
-            width: 300px;
+            width: 400px;
             background-color: white;
             box-shadow: 0 0 10px rgba(0,0,0,0.2);
             transition: transform 0.3s ease-in-out;
             z-index: 1000;
             padding: 20px;
             display: none;
-            overflow-y: auto; /* Enable scrolling */
+            overflow-y: auto;
+        }
+
+        @media screen and (max-width: 768px) {
+            .sliding-panel {
+                width: 100%;
+                left: 0;
+                right: 0;
+                transform: translateX(-100%);
+            }
+
+            .sliding-panel.from-right {
+                transform: translateX(100%);
+            }
+
+            .sliding-panel.active {
+                transform: translateX(0);
+            }
+
+            .sliding-panel-close {
+                right: 15px;
+                top: 15px;
+            }
+
+            .panel-content {
+                padding: 15px;
+            }
+
+            .project-description {
+                margin-top: 15px;
+            }
+
+            .project-description h4 {
+                font-size: 16px;
+                margin: 20px 0 10px;
+            }
+
+            .tech-stack {
+                font-size: 13px;
+                padding: 12px;
+            }
         }
 
         .sliding-panel.from-left {
@@ -382,7 +440,7 @@
         <h1 class="name">Dominik Suwala</h1>
         <div class="nav-buttons">
             <button class="button" onclick="window.location.href='/'">Home</button>
-            <button class="button">About</button>
+            <!-- <button class="button">About</button> -->
         </div>
     </div>
     <div class="main-content">
@@ -407,6 +465,11 @@
                     </div>
                 </div>
                 <button class="details-button" data-panel="antirecommender">Details</button>
+                <div class="build-status">
+                    <a href="https://github.com/dsuwala/anti-recommender/actions" target="_blank" rel="noopener noreferrer">
+                        <img src="https://github.com/dsuwala/anti-recommender/actions/workflows/build-and-deploy.yml/badge.svg" alt="Build Status">
+                    </a>
+                </div>
             </div>
             <div class="project-box">
                 <div class="project-content">
@@ -414,6 +477,11 @@
                     <!-- Project content will go here -->
                 </div>
                 <button class="details-button" data-panel="website">Details</button>
+                <div class="build-status">
+                    <a href="https://github.com/dsuwala/dsuwala-homepage/actions" target="_blank" rel="noopener noreferrer">
+                        <img src="https://github.com/dsuwala/dsuwala-homepage/actions/workflows/build-and-deploy.yml/badge.svg" alt="Build Status">
+                    </a>
+                </div>
             </div>
         </div>
         <div class="project-box">
