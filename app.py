@@ -6,6 +6,7 @@ import uvicorn
 import os
 from google.auth.transport import requests as g_requests
 from google.oauth2 import id_token
+import re
 
 
 app = Flask(__name__, static_folder='static')
@@ -20,6 +21,11 @@ if not PREDICTION_ENGINE_URL:
     raise EnvironmentError("PREDICTION_ENGINE_URL is not set")
 
 
+def clean_movie_title(title: str) -> str:
+    """Remove content within brackets and the brackets themselves."""
+    return re.sub(r'\(.*?\)', '', title).strip()
+
+
 @app.route('/')
 def serve_index():
     return send_from_directory(app.static_folder, 'index.html')
@@ -30,8 +36,9 @@ def antirecommender():
 
     data = request.json
     query = data.get("query")
+    query = re.sub(r'\(.*\)', '', query)
 
-    json = {"movie_title": query}
+    json = {"movie_title": query.strip()}
 
     if data.get("year"):
         year = data.get("year")
@@ -53,7 +60,10 @@ def antirecommender():
     logger.info(f"Response: {response.json()}")
 
     if "error" in response.json().keys():
-        possible_matches = [f"Title: {result[0]}, year: {int(result[1])}" for result in response.json()["possible_matches"]]
+        possible_matches = [
+            f"Title: {result[0]}, year: {int(result[1])}"
+            for result in response.json()["possible_matches"]
+        ]
 
         result = jsonify({
             "query": query,
@@ -62,8 +72,12 @@ def antirecommender():
 
         return result
     else:
-
-        recommendations = [f"Title: {result['standardized_title']}, year: {int(result['year'])}, rating: {result['rating']:.2f}" for result in response.json()["recommendations"]]
+        recommendations = [
+            f"Title: {result['standardized_title']}, "
+            f"year: {int(result['year'])}, "
+            f"rating: {result['rating']:.2f}"
+            for result in response.json()["recommendations"]
+        ]
         result = jsonify({
             "query": query,
             "results": recommendations
@@ -109,4 +123,5 @@ def get_suggestions():
 
 if __name__ == '__main__':
     logger.info("Starting server...")
-    uvicorn.run("app:app", host='0.0.0.0', port=8080, reload=True)
+    app.run(debug=True)
+#    uvicorn.run("app:app", host='0.0.0.0', port=8080, reload=True)
