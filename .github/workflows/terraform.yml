@@ -1,0 +1,88 @@
+name: Terraform Infrastructure Management
+
+env:
+  PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+  PROJECT_NUMBER: ${{ secrets.GCP_PROJECT_NUMBER }}
+  REGION: europe-central2
+  ANTIRECOMMENDER_SERVICE_ACCOUNT_NAME: ${{ secrets.ANTIRECOMMENDER_SVC_ACCOUNT }}
+  HOMEPAGE_SERVICE_ACCOUNT_NAME: ${{ secrets.GCP_RUNNER_SVC_ACCOUNT_NAME }}
+  GITHUB_DEPLOY_SERVICE_ACCOUNT_NAME: ${{ secrets.GCP_SVC_ACCOUNT_NAME }}
+  BUCKET_NAME: ${{ secrets.GCS_BUCKET_NAME }}
+  TF_VERSION: 1.5.0
+  SERVCE_ACCOUNT_KEY: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'terraform/**'
+      - '.github/workflows/terraform.yml'
+  pull_request:
+    paths:
+      - 'terraform/**'
+      - '.github/workflows/terraform.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: 'read'
+  id-token: 'write'
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./terraform
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v3
+
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v2
+      with:
+        terraform_version: ${{ env.TF_VERSION }}
+
+    - name: Authenticate to Google Cloud
+      env:
+        GOOGLE_APPLICATION_CREDENTIALS_JSON: ${{ env.SERVCE_ACCOUNT_KEY }}
+      run: |
+        echo "$GOOGLE_APPLICATION_CREDENTIALS_JSON" | base64 --decode | gcloud auth activate-service-account ${{ env.GITHUB_DEPLOY_SERVICE_ACCOUNT_NAME }}@${{ env.PROJECT_ID }}.iam.gserviceaccount.com --key-file=-
+        gcloud config set project ${{ env.PROJECT_ID }}
+        gcloud config set run/region ${{ env.REGION }}
+
+    - name: Terraform Format
+      run: terraform fmt -check
+      continue-on-error: true
+
+    - name: Terraform Init
+      run: terraform init
+
+    - name: Terraform Validate
+      run: terraform validate
+
+    - name: Terraform Plan
+      if: github.event_name == 'pull_request'
+      run: |
+        terraform plan -var="project_id=${{ env.PROJECT_ID }}" \
+                      -var="project_number=${{ env.PROJECT_NUMBER }}" \
+                      -var="region=${{ env.REGION }}" \
+                      -var="antirecommender_service_account=${{ env.ANTIRECOMMENDER_SERVICE_ACCOUNT_NAME }}" \
+                      -var="homepage_service_account=${{ env.HOMEPAGE_SERVICE_ACCOUNT_NAME }}" \
+                      -var="github_deploy_service_account=${{ env.GITHUB_DEPLOY_SERVICE_ACCOUNT_NAME }}" \
+                      -var="bucket_name=${{ env.BUCKET_NAME }}" \
+                      -no-color
+      continue-on-error: false
+
+    - name: Terraform Apply
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      run: |
+        terraform apply -auto-approve \
+                       -var="project_id=${{ env.PROJECT_ID }}" \
+                       -var="project_number=${{ env.PROJECT_NUMBER }}" \
+                       -var="region=${{ env.REGION }}" \
+                       -var="antirecommender_service_account=${{ env.ANTIRECOMMENDER_SERVICE_ACCOUNT_NAME }}" \
+                       -var="homepage_service_account=${{ env.HOMEPAGE_SERVICE_ACCOUNT_NAME }}" \
+                       -var="github_deploy_service_account=${{ env.GITHUB_DEPLOY_SERVICE_ACCOUNT_NAME }}" \
+                       -var="bucket_name=${{ env.BUCKET_NAME }}"
