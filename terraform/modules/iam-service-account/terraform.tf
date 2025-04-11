@@ -77,3 +77,8 @@ resource "google_storage_bucket_iam_member" "terraform_runner_bucket_admin" {
   member = "serviceAccount:${google_service_account.terraform_runner.email}"
 }
 
+resource "google_storage_bucket_iam_member" "bucket_iam" {
+  bucket = var.bucket_name
+  role   = "roles/storage.admin"
+  member = "serviceAccount:${google_service_account.terraform_runner.email}"
+}
