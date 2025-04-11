@@ -28,3 +28,26 @@ resource "google_project_iam_member" "storage_object_user" {
   role    = "roles/storage.objectUser"
   member  = "serviceAccount:${google_service_account.terraform_runner.email}"
 }
+
+resource "google_project_iam_member" "service_usage_admin" {
+  project = var.project_id
+  role    = "roles/serviceusage.serviceUsageAdmin"
+  member  = "serviceAccount:${google_service_account.terraform_runner.email}"
+}
+
+resource "google_project_iam_member" "service_management_admin" {
+  project = var.project_id
+  role    = "roles/servicemanagement.quotaAdmin"
+  member  = "serviceAccount:${google_service_account.terraform_runner.email}"
+}
+
+resource "google_project_iam_member" "resource_manager_iam_admin" {
+  project = var.project_id
+  role    = "roles/resourcemanager.projectIamAdmin"
+  member  = "serviceAccount:${google_service_account.terraform_runner.email}"
+}
+
+
+
+
+
