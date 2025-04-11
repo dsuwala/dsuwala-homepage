@@ -9,7 +9,7 @@ env:
   HOMEPAGE_SERVICE_ACCOUNT_NAME: homepage-runner
   GITHUB_DEPLOY_SERVICE_ACCOUNT_NAME: github-deploy
   TF_SERVICE_ACCOUNT_NAME: terraform-runner
-  BUCKET_NAME: ${{ secrets.GCS_BUCKET_NAME }}
+  BUCKET_NAME: portfolio-projects-storage
   TF_VERSION: 1.5.0
   SERVCE_ACCOUNT_KEY: ${{ secrets.GCP_TF_SVC_ACCOUNT_KEY }}
   GOOGLE_APPLICATION_CREDENTIALS: ${{ github.workspace }}/gcp-key.json
