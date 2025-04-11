@@ -59,11 +59,14 @@ resource "google_project_iam_member" "iam_service_account_viewer" {
   member  = "serviceAccount:${google_service_account.terraform_runner.email}"
 }
 
+resource "google_project_iam_member" "logging_log_viewer" {
+  project = var.project_id
+  role    = "roles/logging.viewer"
+  member  = "serviceAccount:${google_service_account.terraform_runner.email}"
+}
 
-
-
-
-
-
-
-
+resource "google_project_iam_member" "storage_admin" {
+  project = var.project_id
+  role    = "roles/storage.objectAdmin"
+  member  = "serviceAccount:${google_service_account.terraform_runner.email}"
+}
