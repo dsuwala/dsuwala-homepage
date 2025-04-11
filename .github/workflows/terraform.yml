@@ -10,7 +10,7 @@ env:
   BUCKET_NAME: ${{ secrets.GCS_BUCKET_NAME }}
   TF_VERSION: 1.5.0
   SERVCE_ACCOUNT_KEY: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
-  GOOGLE_APPLICATION_CREDENTIALS_JSON: ${{ github.workspace }}/gcp-key.json
+  GOOGLE_APPLICATION_CREDENTIALS: ${{ github.workspace }}/gcp-key.json
 
 on:
   push:
@@ -47,14 +47,12 @@ jobs:
     
     - name: Prepare credentials
       run: |
-        echo "$SERVCE_ACCOUNT_KEY" | base64 --decode > gcp-key.json
-        chmod 600 gcp-key.json
+        echo "$SERVCE_ACCOUNT_KEY" | base64 --decode > ${{ env.GOOGLE_APPLICATION_CREDENTIALS }}
+        chmod 600 ${{ env.GOOGLE_APPLICATION_CREDENTIALS }}
 
     - name: Authenticate to Google Cloud
-      env:
-        GOOGLE_APPLICATION_CREDENTIALS_JSON: ${{ env.SERVCE_ACCOUNT_KEY }}
       run: |
-        gcloud auth activate-service-account ${{ env.GITHUB_DEPLOY_SERVICE_ACCOUNT_NAME }}@${{ env.PROJECT_ID }}.iam.gserviceaccount.com --key-file=gcp-key.json
+        gcloud auth activate-service-account ${{ env.GITHUB_DEPLOY_SERVICE_ACCOUNT_NAME }}@${{ env.PROJECT_ID }}.iam.gserviceaccount.com --key-file=${{ env.GOOGLE_APPLICATION_CREDENTIALS }}
         gcloud config set project ${{ env.PROJECT_ID }}
         gcloud config set run/region ${{ env.REGION }}
 
