@@ -78,6 +78,7 @@ jobs:
                       -var="github_deploy_service_account=${{ env.GITHUB_DEPLOY_SERVICE_ACCOUNT_NAME }}" \
                       -var="bucket_name=${{ env.BUCKET_NAME }}" \
                       -var="terraform_service_account_name=${{ env.TF_SERVICE_ACCOUNT_NAME }}" \
+                      -var="TF_LOG=debug" \
                       -no-color
       continue-on-error: false
 
