@@ -47,6 +47,22 @@ resource "google_project_iam_member" "resource_manager_iam_admin" {
   member  = "serviceAccount:${google_service_account.terraform_runner.email}"
 }
 
+resource "google_project_iam_member" "service_account_user" {
+  project = var.project_id
+  role    = "roles/iam.serviceAccountUser"
+  member  = "serviceAccount:${google_service_account.terraform_runner.email}"
+}
+
+resource "google_project_iam_member" "iam_service_account_viewer" {
+  project = var.project_id
+  role    = "roles/iam.serviceAccountViewer"
+  member  = "serviceAccount:${google_service_account.terraform_runner.email}"
+}
+
+
+
+
+
 
 
 
