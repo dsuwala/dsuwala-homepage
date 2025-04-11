@@ -22,3 +22,9 @@ resource "google_project_iam_member" "storage_object_viewer" {
   role    = "roles/storage.objectViewer"
   member  = "serviceAccount:${google_service_account.terraform_runner.email}"
 }
+
+resource "google_project_iam_member" "storage_object_user" {
+  project = var.project_id
+  role    = "roles/storage.objectUser"
+  member  = "serviceAccount:${google_service_account.terraform_runner.email}"
+}
