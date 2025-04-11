@@ -79,7 +79,7 @@ jobs:
                       -var="homepage_service_account=${{ env.HOMEPAGE_SERVICE_ACCOUNT_NAME }}" \
                       -var="github_deploy_service_account=${{ env.GITHUB_DEPLOY_SERVICE_ACCOUNT_NAME }}" \
                       -var="bucket_name=${{ env.BUCKET_NAME }}" \
-                      -var="terraform_service_account_name=${{ env.TF_SERVICE_ACCOUNT_NAME }}" \
+                      -var="terraform_service_account=${{ env.TF_SERVICE_ACCOUNT_NAME }}" \
                       -no-color
       continue-on-error: false
 
@@ -94,7 +94,7 @@ jobs:
                        -var="homepage_service_account=${{ env.HOMEPAGE_SERVICE_ACCOUNT_NAME }}" \
                        -var="github_deploy_service_account=${{ env.GITHUB_DEPLOY_SERVICE_ACCOUNT_NAME }}" \
                        -var="bucket_name=${{ env.BUCKET_NAME }}" \
-                       -var="terraform_service_account_name=${{ env.TF_SERVICE_ACCOUNT_NAME }}" \
+                       -var="terraform_service_account=${{ env.TF_SERVICE_ACCOUNT_NAME }}" \
     
     - name: Cleanup
       if: always()
