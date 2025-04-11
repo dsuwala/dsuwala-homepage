@@ -64,3 +64,9 @@ resource "google_project_iam_member" "logging_log_viewer" {
   role    = "roles/logging.viewer"
   member  = "serviceAccount:${google_service_account.terraform_runner.email}"
 }
+
+resource "google_project_iam_member" "logging_log_writer" {
+  project = var.project_id
+  role    = "roles/logging.logWriter"
+  member  = "serviceAccount:${google_service_account.terraform_runner.email}"
+}

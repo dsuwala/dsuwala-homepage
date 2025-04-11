@@ -17,3 +17,15 @@ resource "google_project_iam_member" "antirecommender_artifact_registry_reader" 
   member  = "serviceAccount:${google_service_account.antirecommender_run.email}"
 }
 
+resource "google_project_iam_member" "antirecommender_log_writer" {
+  project = var.project_id
+  role    = "roles/logging.logWriter"
+  member  = "serviceAccount:${google_service_account.antirecommender_run.email}"
+}
+
+resource "google_project_iam_member" "antirecommender_log_viewer" {
+  project = var.project_id
+  role    = "roles/logging.viewer"
+  member  = "serviceAccount:${google_service_account.antirecommender_run.email}"
+}
+
