@@ -17,6 +17,12 @@ resource "google_project_iam_member" "artifactregistry_admin" {
   member  = "serviceAccount:${google_service_account.terraform_runner.email}"
 }
 
+resource "google_project_iam_member" "storage_bucket_viewer" {
+  project = var.project_id
+  role    = "roles/storage.bucketViewer"
+  member  = "serviceAccount:${google_service_account.terraform_runner.email}"
+}
+
 resource "google_project_iam_member" "storage_object_viewer" {
   project = var.project_id
   role    = "roles/storage.objectViewer"
@@ -80,5 +86,11 @@ resource "google_storage_bucket_iam_member" "terraform_runner_bucket_admin" {
 resource "google_storage_bucket_iam_member" "bucket_iam" {
   bucket = var.bucket_name
   role   = "roles/storage.admin"
+  member = "serviceAccount:${google_service_account.terraform_runner.email}"
+}
+
+resource "google_storage_bucket_iam_member" "bucket_viewer" {
+  bucket = var.bucket_name
+  role   = "roles/storage.bucketViewer"
   member = "serviceAccount:${google_service_account.terraform_runner.email}"
 }
