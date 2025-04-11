@@ -70,3 +70,10 @@ resource "google_project_iam_member" "logging_log_writer" {
   role    = "roles/logging.logWriter"
   member  = "serviceAccount:${google_service_account.terraform_runner.email}"
 }
+
+resource "google_storage_bucket_iam_member" "terraform_runner_bucket_admin" {
+  bucket = var.bucket_name
+  role   = "roles/storage.objectAdmin"
+  member = "serviceAccount:${google_service_account.terraform_runner.email}"
+}
+

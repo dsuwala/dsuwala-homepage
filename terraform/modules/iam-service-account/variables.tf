@@ -23,4 +23,8 @@ variable "terraform_service_account" {
   type        = string
 } 
 
+variable "bucket_name" {
+  description = "Name of the GCS bucket"
+  type        = string
+}
 
