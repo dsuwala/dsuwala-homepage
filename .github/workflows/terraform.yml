@@ -4,10 +4,11 @@ env:
   PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
   PROJECT_NUMBER: ${{ secrets.GCP_PROJECT_NUMBER }}
   REGION: europe-central2
-  ANTIRECOMMENDER_SERVICE_ACCOUNT_NAME: ${{ secrets.ANTIRECOMMENDER_SVC_ACCOUNT }}
-  HOMEPAGE_SERVICE_ACCOUNT_NAME: ${{ secrets.GCP_RUNNER_SVC_ACCOUNT_NAME }}
-  GITHUB_DEPLOY_SERVICE_ACCOUNT_NAME: ${{ secrets.GCP_SVC_ACCOUNT_NAME }}
-  TF_SERVICE_ACCOUNT_NAME: ${{ secrets.GCP_TF_SVC_ACCOUNT_NAME }}
+  # ANTIRECOMMENDER_SERVICE_ACCOUNT_NAME: ${{ secrets.ANTIRECOMMENDER_SVC_ACCOUNT }}
+  ANTIRECOMMENDER_SERVICE_ACCOUNT_NAME: antirecommender-run
+  HOMEPAGE_SERVICE_ACCOUNT_NAME: homepage-runner
+  GITHUB_DEPLOY_SERVICE_ACCOUNT_NAME: github-deploy
+  TF_SERVICE_ACCOUNT_NAME: terraform-runner
   BUCKET_NAME: ${{ secrets.GCS_BUCKET_NAME }}
   TF_VERSION: 1.5.0
   SERVCE_ACCOUNT_KEY: ${{ secrets.GCP_TF_SVC_ACCOUNT_KEY }}
@@ -72,14 +73,14 @@ jobs:
         TF_LOG: debug
       if: github.event_name == 'push'
       run: |
-        terraform plan -var="project_id=${{ env.PROJECT_ID }}" \
-                      -var="project_number=${{ env.PROJECT_NUMBER }}" \
-                      -var="region=${{ env.REGION }}" \
-                      -var="antirecommender_service_account=${{ env.ANTIRECOMMENDER_SERVICE_ACCOUNT_NAME }}" \
-                      -var="homepage_service_account=${{ env.HOMEPAGE_SERVICE_ACCOUNT_NAME }}" \
-                      -var="github_deploy_service_account=${{ env.GITHUB_DEPLOY_SERVICE_ACCOUNT_NAME }}" \
-                      -var="bucket_name=${{ env.BUCKET_NAME }}" \
-                      -var="terraform_service_account=${{ env.TF_SERVICE_ACCOUNT_NAME }}" \
+        terraform plan -var="project_id=${{env.PROJECT_ID }}" \
+                      -var="project_number=${{env.PROJECT_NUMBER }}" \
+                      -var="region=${{env.REGION }}" \
+                      -var="antirecommender_service_account=${{env.ANTIRECOMMENDER_SERVICE_ACCOUNT_NAME }}" \
+                      -var="homepage_service_account=${{env.HOMEPAGE_SERVICE_ACCOUNT_NAME }}" \
+                      -var="github_deploy_service_account=${{env.GITHUB_DEPLOY_SERVICE_ACCOUNT_NAME }}" \
+                      -var="bucket_name=${{env.BUCKET_NAME }}" \
+                      -var="terraform_service_account=${{env.TF_SERVICE_ACCOUNT_NAME }}" \
                       -no-color
       continue-on-error: false
 
