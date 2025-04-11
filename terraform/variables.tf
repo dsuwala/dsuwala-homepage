@@ -33,6 +33,11 @@ variable "github_deploy_service_account" {
   sensitive   = true
 }
 
+variable "terraform_service_account" {
+  description = "Service account name for the terraform service"
+  type        = string
+}
+
 variable "bucket_name" {
   description = "The GCP bucket name"
   type        = string

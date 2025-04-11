@@ -1,4 +1,3 @@
-
 provider "google" {
   project = var.project_id
 }
@@ -10,6 +9,7 @@ module "modules-iam-service-account" {
   antirecommender_service_account = var.antirecommender_service_account
   homepage_service_account        = var.homepage_service_account
   github_deploy_service_account   = var.github_deploy_service_account
+  terraform_service_account       = var.terraform_service_account
 }
 
 

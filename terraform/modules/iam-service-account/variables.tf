@@ -18,4 +18,9 @@ variable "github_deploy_service_account" {
   type        = string
 } 
 
+variable "terraform_service_account" {
+  description = "Service account name for the terraform service"
+  type        = string
+} 
+
 

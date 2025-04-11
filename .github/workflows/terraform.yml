@@ -7,9 +7,10 @@ env:
   ANTIRECOMMENDER_SERVICE_ACCOUNT_NAME: ${{ secrets.ANTIRECOMMENDER_SVC_ACCOUNT }}
   HOMEPAGE_SERVICE_ACCOUNT_NAME: ${{ secrets.GCP_RUNNER_SVC_ACCOUNT_NAME }}
   GITHUB_DEPLOY_SERVICE_ACCOUNT_NAME: ${{ secrets.GCP_SVC_ACCOUNT_NAME }}
+  TF_SERVICE_ACCOUNT_NAME: ${{ secrets.GCP_TF_SVC_ACCOUNT_NAME }}
   BUCKET_NAME: ${{ secrets.GCS_BUCKET_NAME }}
   TF_VERSION: 1.5.0
-  SERVCE_ACCOUNT_KEY: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
+  SERVCE_ACCOUNT_KEY: ${{ secrets.GCP_TF_SVC_ACCOUNT_KEY }}
   GOOGLE_APPLICATION_CREDENTIALS: ${{ github.workspace }}/gcp-key.json
 
 on:
@@ -52,7 +53,7 @@ jobs:
 
     - name: Authenticate to Google Cloud
       run: |
-        gcloud auth activate-service-account ${{ env.GITHUB_DEPLOY_SERVICE_ACCOUNT_NAME }}@${{ env.PROJECT_ID }}.iam.gserviceaccount.com --key-file=${{ env.GOOGLE_APPLICATION_CREDENTIALS }}
+        gcloud auth activate-service-account ${{ env.TF_SERVICE_ACCOUNT_NAME }}@${{ env.PROJECT_ID }}.iam.gserviceaccount.com --key-file=${{ env.GOOGLE_APPLICATION_CREDENTIALS }}
         gcloud config set project ${{ env.PROJECT_ID }}
         gcloud config set run/region ${{ env.REGION }}
 
@@ -67,7 +68,7 @@ jobs:
       run: terraform validate
 
     - name: Terraform Plan
-      if: github.event_name == 'pull_request'
+      if: github.event_name == 'push'
       run: |
         terraform plan -var="project_id=${{ env.PROJECT_ID }}" \
                       -var="project_number=${{ env.PROJECT_NUMBER }}" \
@@ -76,6 +77,7 @@ jobs:
                       -var="homepage_service_account=${{ env.HOMEPAGE_SERVICE_ACCOUNT_NAME }}" \
                       -var="github_deploy_service_account=${{ env.GITHUB_DEPLOY_SERVICE_ACCOUNT_NAME }}" \
                       -var="bucket_name=${{ env.BUCKET_NAME }}" \
+                      -var="terraform_service_account_name=${{ env.TF_SERVICE_ACCOUNT_NAME }}" \
                       -no-color
       continue-on-error: false
 
@@ -89,8 +91,9 @@ jobs:
                        -var="antirecommender_service_account=${{ env.ANTIRECOMMENDER_SERVICE_ACCOUNT_NAME }}" \
                        -var="homepage_service_account=${{ env.HOMEPAGE_SERVICE_ACCOUNT_NAME }}" \
                        -var="github_deploy_service_account=${{ env.GITHUB_DEPLOY_SERVICE_ACCOUNT_NAME }}" \
-                       -var="bucket_name=${{ env.BUCKET_NAME }}"
+                       -var="bucket_name=${{ env.BUCKET_NAME }}" \
+                       -var="terraform_service_account_name=${{ env.TF_SERVICE_ACCOUNT_NAME }}" \
     
     - name: Cleanup
       if: always()
-      run: rm -f ${{ env.GOOGLE_APPLICATION_CREDENTIALS_JSON }}
+      run: rm -f ${{ env.GOOGLE_APPLICATION_CREDENTIALS }}
