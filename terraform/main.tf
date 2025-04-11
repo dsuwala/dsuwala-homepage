@@ -10,6 +10,7 @@ module "modules-iam-service-account" {
   homepage_service_account        = var.homepage_service_account
   github_deploy_service_account   = var.github_deploy_service_account
   terraform_service_account       = var.terraform_service_account
+  bucket_name                     = var.bucket_name
 }
 
 
