@@ -70,3 +70,9 @@ resource "google_project_iam_member" "storage_admin" {
   role    = "roles/storage.objectAdmin"
   member  = "serviceAccount:${google_service_account.terraform_runner.email}"
 }
+
+resource "google_project_iam_member" "storage_object_creator" {
+  project = var.project_id
+  role    = "roles/storage.objectCreator"
+  member  = "serviceAccount:${google_service_account.terraform_runner.email}"
+}
