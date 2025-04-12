@@ -1,0 +1,3 @@
+[submodule "anti-recommender"]
+	path = anti-recommender
+	url = git@github.com:dsuwala/anti-recommender.git
