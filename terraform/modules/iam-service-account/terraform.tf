@@ -17,35 +17,11 @@ resource "google_project_iam_member" "artifactregistry_admin" {
   member  = "serviceAccount:${google_service_account.terraform_runner.email}"
 }
 
-# resource "google_project_iam_member" "storage_bucket_viewer" {
-#   project = var.project_id
-#   role    = "roles/storage.bucketViewer"
-#   member  = "serviceAccount:${google_service_account.terraform_runner.email}"
-# }
-
-# resource "google_project_iam_member" "storage_object_viewer" {
-#   project = var.project_id
-#   role    = "roles/storage.objectViewer"
-#   member  = "serviceAccount:${google_service_account.terraform_runner.email}"
-# }
-
-# resource "google_project_iam_member" "storage_object_user" {
-#   project = var.project_id
-#   role    = "roles/storage.objectUser"
-#   member  = "serviceAccount:${google_service_account.terraform_runner.email}"
-# }
-
 resource "google_project_iam_member" "service_usage_admin" {
   project = var.project_id
   role    = "roles/serviceusage.serviceUsageAdmin"
   member  = "serviceAccount:${google_service_account.terraform_runner.email}"
 }
-
-# resource "google_project_iam_member" "service_management_admin" {
-#   project = var.project_id
-#   role    = "roles/servicemanagement.quotaAdmin"
-#   member  = "serviceAccount:${google_service_account.terraform_runner.email}"
-# }
 
 resource "google_project_iam_member" "resource_manager_iam_admin" {
   project = var.project_id

@@ -3,8 +3,8 @@ name: Build and deploy to GCP
 env:
   PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
   SERVICE_ACCOUNT_KEY: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
-  SVC_ACCOUNT_NAME: ${{ secrets.GCP_SVC_ACCOUNT_NAME }}
-  SVC_ACCOUNT_EMAIL: ${{ secrets.GCP_SVC_ACCOUNT_NAME }}@${{ secrets.GCP_PROJECT_ID }}.iam.gserviceaccount.com
+  SVC_ACCOUNT_NAME: github-deploy
+  SVC_ACCOUNT_EMAIL: github-deploy@${{ secrets.GCP_PROJECT_ID }}.iam.gserviceaccount.com
   PREDICTION_ENGINE_URL: ${{ secrets.CLUSTERING_ENGINE_URL }}
   DOCKER_REPO: my-repo
   DOCKER_IMAGE: homepage
@@ -12,17 +12,16 @@ env:
   REGION: europe-central2
 
 on:
-  # push:
-  #   branches:
-  #     - main
-  # paths-ignore:
-  #     - 'terraform/**'
-  #     - '.github/workflows/terraform.yml'
-  # pull_request:
-  #   paths-ignore:
-  #     - 'terraform/**'
-  #     - '.github/workflows/terraform.yml'
-
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - 'terraform/**'
+      - '.github/workflows/terraform.yml'
+  pull_request:
+    paths-ignore:
+      - 'terraform/**'
+      - '.github/workflows/terraform.yml'
   workflow_dispatch:
 
 permissions:
