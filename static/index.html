@@ -96,6 +96,7 @@
             bottom: 20px;
             left: 20px;
             display: flex;
+            flex-direction: row;
             gap: 10px;
         }
 
@@ -471,8 +472,8 @@
                         <div id="resultContent">
                             <p class="default-message">
                                 Select a movie to learn what movie you won't like...maybe. 
-                                It may still be good movies, so why not try? 
-                                Start writing and select movie from the list. <br>
+                                They may still be good movies, so why not try? 
+                                Start writing and select a movie from the list. <br>
                                 Important: year in the brackets is only a suggestion and before you hit search 
                                 you need to set year to the correct value.
                             </p>
@@ -481,6 +482,9 @@
                 </div>
                 <button class="details-button" data-panel="antirecommender">Details</button>
                 <div class="build-status">
+                    <a href="https://github.com/dsuwala/anti-recommender/actions" target="_blank" rel="noopener noreferrer">
+                        <img src="https://github.com/dsuwala/anti-recommender/actions/workflows/test_antirecommender.yml/badge.svg" alt="Build Status">
+                    </a>
                     <a href="https://github.com/dsuwala/anti-recommender/actions" target="_blank" rel="noopener noreferrer">
                         <img src="https://github.com/dsuwala/anti-recommender/actions/workflows/build-and-deploy.yml/badge.svg" alt="Build Status">
                     </a>
@@ -493,6 +497,9 @@
                 </div>
                 <button class="details-button" data-panel="website">Details</button>
                 <div class="build-status">
+                    <a href="https://github.com/dsuwala/dsuwala-homepage/actions" target="_blank" rel="noopener noreferrer">
+                        <img src="https://github.com/dsuwala/dsuwala-homepage/actions/workflows/terraform.yml/badge.svg" alt="Build Status">
+                    </a>
                     <a href="https://github.com/dsuwala/dsuwala-homepage/actions" target="_blank" rel="noopener noreferrer">
                         <img src="https://github.com/dsuwala/dsuwala-homepage/actions/workflows/build-and-deploy.yml/badge.svg" alt="Build Status">
                     </a>
@@ -550,13 +557,15 @@
             <div class="project-description">
                 <p>A cloud-native portfolio website showcasing my projects through a microservices architecture. 
                     Each project runs as an independent service in Google Cloud Run scaling to zero, 
-                    to keeps them cost-effective and scalable.</p>
+                    to keeps them cost-effective and scalable. GCP infrastructure was first created manually 
+                    and is currently fully migrated into Terraform management.</p>
                 
                 <h4>Key Achievements:</h4>
                 <ul>
                     <li>Designed and implemented a secure microservices architecture on Google Cloud Platform</li>
+                    <li>Migrated the infrastructure to be managed by Terraform</li>
                     <li>Containerized the webpage using Docker</li>
-                    <li>Set up automated CI/CD pipelines using GitHub Actions</li>
+                    <li>Set up automated CI/CD pipelines for terraform sync and GCP deployment using GitHub Actions</li>
                     <li>Implemented container-based deployment with Docker</li>
                     <li>Established secure service-to-service authentication using GitHub Secrets and GCP service accounts</li>
                     <li>Leveraged AI-assisted development using Large Language Models to accelerate frontend implementation and improve code quality</li>
@@ -564,7 +573,7 @@
 
                 <h4>Tech Stack:</h4>
                 <p class="tech-stack">
-                    Google Cloud Platform • Cloud Run • Docker • GitHub Actions • CI/CD • Microservices • Flask • 
+                    Google Cloud Platform • Cloud Run • Terraform • Docker • GitHub Actions • CI/CD • Microservices • Flask • 
                     Container Registry • Service Authentication • GitHub Secrets • Python • LLM-Assisted Development <br>
                 </p>
             </div>

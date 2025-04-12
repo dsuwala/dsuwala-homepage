@@ -1,4 +1,4 @@
-name: Terraform Infrastructure Management
+name: Sync Terraform state
 
 env:
   PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
